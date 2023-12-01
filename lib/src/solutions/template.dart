@@ -1,10 +1,12 @@
-// import 'package:advent_of_code_2023/src/aoc.dart';
-// import 'package:advent_of_code_2023/src/utils.dart';
+// import 'package:advent_of_code_2023/advent_of_code_2023.dart';
 
 // void main() async {
 //   List<String> puzzleInput = await Aoc.puzzleInputStrings;
-//   String puzzleInput = await Aoc.puzzleInputString;
-//   List<int> puzzleInput = await Aoc.puzzleInputInts;
+//   List<String> testInput = await Aoc.testInputStrings;
 
-//   const testInput = 
+//   String puzzleInput = await Aoc.puzzleInputString;
+//   String testInput = await Aoc.testInputString;
+
+//   List<int> puzzleInput = await Aoc.puzzleInputInts;
+//   List<int> testInput = await Aoc.testInputInts;
 // }
