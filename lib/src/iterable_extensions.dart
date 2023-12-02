@@ -28,14 +28,6 @@ extension IterableExtension<E> on Iterable<E> {
     return elementAt(length ~/ 2);
   }
 
-  /// Implementation of [map] that passes both the iteration and the element to
-  /// the provided function [f].
-  Stream<R> mapI<R>(R Function(int index, E element) f) async* {
-    for (int i = 0; i < length; i++) {
-      yield f(i, elementAt(i));
-    }
-  }
-
   /// Zips this with [other].
   ///
   /// Returns an iterable containing [Pair]s, where the left element is from
@@ -80,4 +72,9 @@ extension IterableExtension<E> on Iterable<E> {
       yield window;
     }
   }
+}
+
+extension RecordIterableExtension<K, V> on Iterable<(K, V)> {
+  Map<K, V> asMap() => Map.fromEntries(
+      map(((K, V) element) => MapEntry(element.$1, element.$2)));
 }
