@@ -1,3 +1,4 @@
 .dart_tool/
 session_id.txt
 puzzle_inputs/*/input.txt
+.vscode/*
