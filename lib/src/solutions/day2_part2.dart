@@ -51,8 +51,7 @@ int solve(List<String> input) {
 
 Map<String, int> minCubesForGame(String game) {
   List<String> sets = game.split(': ').second.split('; ');
-  Iterable<Map<String, int>> minCubesPerSet =
-      sets.map((set) => getCubesFromSet(set));
+  Iterable<Map<String, int>> minCubesPerSet = sets.map(getCubesFromSet);
 
   Map<String, int> minCubes = {
     'red': 0,
@@ -70,9 +69,7 @@ Map<String, int> minCubesForGame(String game) {
 
 Map<String, int> getCubesFromSet(String set) {
   return set.split(', ').map((cube) {
-    List<String> ws = cube.split(' ');
-    int quantity = int.parse(ws.first);
-    String color = ws.second;
-    return (color, quantity);
+    final [quantity, color] = cube.split(' ');
+    return (color, int.parse(quantity));
   }).asMap();
 }

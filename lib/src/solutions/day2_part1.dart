@@ -86,9 +86,7 @@ bool isValidSet(String set) {
 
 Map<String, int> getCubesFromSet(String set) {
   return set.split(', ').map((cube) {
-    List<String> ws = cube.split(' ');
-    int quantity = int.parse(ws.first);
-    String color = ws.second;
-    return (color, quantity);
+    final [quantity, color, ...] = cube.split(' ');
+    return (color, int.parse(quantity));
   }).asMap();
 }

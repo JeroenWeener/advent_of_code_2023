@@ -58,10 +58,15 @@ void main() async {
 RegExp reDigit = RegExp(r'\d');
 RegExp reSymbol = RegExp(r'[^.\d]');
 
-(List<int>, List<(int, int, int)>) parseLine(String line) {
+typedef PotentialPart = ({
+  int partNumber,
+  int position,
+  int length,
+});
+
+(List<int>, List<PotentialPart>) parseLine(String line) {
   List<int> confirmedParts = [];
-  // (part number, position, length)
-  List<(int, int, int)> pendingParts = [];
+  List<PotentialPart> potentialParts = [];
 
   String numberBuffer = '';
   bool hasPrecedingSymbol = false;
@@ -91,7 +96,11 @@ RegExp reSymbol = RegExp(r'[^.\d]');
         if (hasPrecedingSymbol) {
           confirmedParts.add(partNumber);
         } else {
-          pendingParts.add((partNumber, startingPoint, numberBuffer.length));
+          potentialParts.add((
+            partNumber: partNumber,
+            position: startingPoint,
+            length: numberBuffer.length,
+          ));
         }
         numberBuffer = '';
       }
@@ -99,7 +108,7 @@ RegExp reSymbol = RegExp(r'[^.\d]');
     }
   }
 
-  return (confirmedParts, pendingParts);
+  return (confirmedParts, potentialParts);
 }
 
 int solve(List<String> input) {
@@ -107,22 +116,21 @@ int solve(List<String> input) {
   int lineLength = input.first.length;
 
   List<int> allConfirmedParts = [];
-  // (line number, [(part number, position, length)])
-  List<(int, List<(int, int, int)>)> allPendingParts = [];
+  List<(int, List<PotentialPart>)> allPotentialParts = [];
 
   for (int lineIndex = 0; lineIndex < input.length; lineIndex++) {
     String line = input[lineIndex];
 
-    final (confirmedParts, pendingParts) = parseLine(line);
+    final (confirmedParts, potentialParts) = parseLine(line);
 
     allConfirmedParts.addAll(confirmedParts);
-    allPendingParts.add((lineIndex, pendingParts));
+    allPotentialParts.add((lineIndex, potentialParts));
   }
 
-  for (final (int lineNumber, a) in allPendingParts) {
-    for (final (int n, int pos, int length) in a) {
-      int xMin = [0, pos - 1].max();
-      int xMax = [lineLength, pos + length + 1].min();
+  for (final (int lineNumber, List<PotentialPart> a) in allPotentialParts) {
+    for (final PotentialPart(:partNumber, :position, :length) in a) {
+      int xMin = [0, position - 1].max();
+      int xMax = [lineLength, position + length + 1].min();
 
       for (int x = xMin; x < xMax; x++) {
         String? above = lineNumber > 0 ? input[lineNumber - 1][x] : null;
@@ -131,7 +139,7 @@ int solve(List<String> input) {
 
         if (above != null && reSymbol.hasMatch(above) ||
             below != null && reSymbol.hasMatch(below)) {
-          allConfirmedParts.add(n);
+          allConfirmedParts.add(partNumber);
           break;
         }
       }

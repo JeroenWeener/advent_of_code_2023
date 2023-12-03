@@ -53,7 +53,7 @@ int solve(List<String> input) {
 }
 
 int? digitInString(String s) {
-  int? d = s.split('').map((c) => int.tryParse(c)).whereType<int>().firstOrNull;
+  int? d = s.split('').map(int.tryParse).whereType<int>().firstOrNull;
   if (d != null) {
     return d;
   }

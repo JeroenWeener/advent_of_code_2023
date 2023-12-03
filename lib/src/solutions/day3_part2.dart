@@ -55,14 +55,23 @@ void main() async {
 RegExp reDigit = RegExp(r'\d');
 RegExp reStar = RegExp(r'\*');
 
-(List<(int, (int, int))>, List<(int, int, int)>) parseLine(
+typedef PotentialPart = ({
+  int partNumber,
+  int position,
+  int length,
+});
+
+typedef Part = ({
+  int partNumber,
+  (int, int) gearPos,
+});
+
+(List<Part>, List<PotentialPart>) parseLine(
   String line,
   int lineIndex,
 ) {
-  // (part number, gear coordinates)
-  List<(int, (int, int))> confirmedParts = [];
-  // (part number, position, length)
-  List<(int, int, int)> pendingParts = [];
+  List<Part> confirmedParts = [];
+  List<PotentialPart> potentialParts = [];
 
   String numberBuffer = '';
   bool hasPrecedingStar = false;
@@ -82,7 +91,10 @@ RegExp reStar = RegExp(r'\*');
       if (numberBuffer.isNotEmpty) {
         int partNumber = int.parse(numberBuffer);
         numberBuffer = '';
-        confirmedParts.add((partNumber, (lineIndex, characterIndex)));
+        confirmedParts.add((
+          partNumber: partNumber,
+          gearPos: (lineIndex, characterIndex),
+        ));
       }
       hasPrecedingStar = true;
     } else {
@@ -91,10 +103,17 @@ RegExp reStar = RegExp(r'\*');
         int partNumber = int.parse(numberBuffer);
         if (hasPrecedingStar) {
           confirmedParts.add(
-            (partNumber, (lineIndex, characterIndex - numberBuffer.length - 1)),
+            (
+              partNumber: partNumber,
+              gearPos: (lineIndex, characterIndex - numberBuffer.length - 1),
+            ),
           );
         } else {
-          pendingParts.add((partNumber, startingPoint, numberBuffer.length));
+          potentialParts.add((
+            partNumber: partNumber,
+            position: startingPoint,
+            length: numberBuffer.length,
+          ));
         }
         numberBuffer = '';
       }
@@ -102,31 +121,29 @@ RegExp reStar = RegExp(r'\*');
     }
   }
 
-  return (confirmedParts, pendingParts);
+  return (confirmedParts, potentialParts);
 }
 
 int solve(List<String> input) {
   input = input.map((line) => line += '.').toList();
   int lineLength = input.first.length;
 
-  // (part, gear coordinates)
-  List<(int, (int, int))> allConfirmedParts = [];
-  // (line number, [(part number, position, length)])
-  List<(int, List<(int, int, int)>)> allPendingParts = [];
+  List<Part> allConfirmedParts = [];
+  List<(int, List<PotentialPart>)> allPotentialParts = [];
 
   for (int lineIndex = 0; lineIndex < input.length; lineIndex++) {
     String line = input[lineIndex];
 
-    final (confirmedParts, pendingParts) = parseLine(line, lineIndex);
+    final (confirmedParts, potentialParts) = parseLine(line, lineIndex);
 
     allConfirmedParts.addAll(confirmedParts);
-    allPendingParts.add((lineIndex, pendingParts));
+    allPotentialParts.add((lineIndex, potentialParts));
   }
 
-  for (final (int lineNumber, a) in allPendingParts) {
-    for (final (int n, int pos, int length) in a) {
-      int xMin = [0, pos - 1].max();
-      int xMax = [lineLength, pos + length + 1].min();
+  for (final (int lineNumber, a) in allPotentialParts) {
+    for (final PotentialPart(:partNumber, :position, :length) in a) {
+      int xMin = [0, position - 1].max();
+      int xMax = [lineLength, position + length + 1].min();
 
       for (int x = xMin; x < xMax; x++) {
         String? above = lineNumber > 0 ? input[lineNumber - 1][x] : null;
@@ -134,26 +151,32 @@ int solve(List<String> input) {
             lineNumber < input.length - 1 ? input[lineNumber + 1][x] : null;
 
         if (above != null && reStar.hasMatch(above)) {
-          allConfirmedParts.add((n, (lineNumber - 1, x)));
+          allConfirmedParts.add((
+            partNumber: partNumber,
+            gearPos: (lineNumber - 1, x),
+          ));
         }
         if (below != null && reStar.hasMatch(below)) {
-          allConfirmedParts.add((n, (lineNumber + 1, x)));
+          allConfirmedParts.add((
+            partNumber: partNumber,
+            gearPos: (lineNumber + 1, x),
+          ));
         }
       }
     }
   }
 
-  return allConfirmedParts.map((part) {
-        (int, int) gearCoordinates = part.$2;
-        Iterable<(int, (int, int))> partsAroundGear =
-            allConfirmedParts.where((part) => part.$2 == gearCoordinates);
+  return allConfirmedParts.map((Part part) {
+        (int, int) gearCoordinates = part.gearPos;
+        Iterable<Part> partsAroundGear =
+            allConfirmedParts.where((part) => part.gearPos == gearCoordinates);
 
         if (partsAroundGear.length != 2) {
           return 0;
         }
 
-        int first = partsAroundGear.first.$1;
-        int last = partsAroundGear.last.$1;
+        int first = partsAroundGear.first.partNumber;
+        int last = partsAroundGear.last.partNumber;
 
         return first * last;
       }).sum() ~/

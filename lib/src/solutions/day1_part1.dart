@@ -58,7 +58,7 @@ void main() async {
 
 int solve(List<String> input) {
   return input
-      .map((s) => s.split('').map((c) => int.tryParse(c)).whereType<int>())
+      .map((s) => s.split('').map(int.tryParse).whereType<int>())
       .map((ns) => 10 * ns.first + ns.last)
       .sum();
 }
