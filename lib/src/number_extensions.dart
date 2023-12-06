@@ -44,3 +44,9 @@ extension NumberListExtension<E extends num> on Iterable<E> {
   /// Sames as [diff], but returns the differences as absolute values.
   Iterable<E> diffAbs() => diff().map((E e) => e.abs() as E);
 }
+
+Iterable<int> range(int end, {int start = 0}) sync* {
+  for (int i = start; i < end; i++) {
+    yield i;
+  }
+}

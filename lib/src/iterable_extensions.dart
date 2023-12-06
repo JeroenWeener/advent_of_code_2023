@@ -74,7 +74,12 @@ extension IterableExtension<E> on Iterable<E> {
   }
 }
 
-extension RecordIterableExtension<K, V> on Iterable<(K, V)> {
-  Map<K, V> asMap() => Map.fromEntries(
-      map(((K, V) element) => MapEntry(element.$1, element.$2)));
+extension IterableIterableExtension<E> on Iterable<Iterable<E>> {
+  Iterable<Iterable<E>> get T sync* {
+    assert(map((es) => es.length).every((e) => e == first.length));
+
+    for (var i = 0; i < first.length; i++) {
+      yield map((e) => e.elementAt(i));
+    }
+  }
 }
