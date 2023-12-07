@@ -2,6 +2,5 @@ include: package:lints/recommended.yaml
 
 linter:
   rules:
-    - prefer_expression_function_bodies
     - unnecessary_lambdas
     - lines_longer_than_80_chars

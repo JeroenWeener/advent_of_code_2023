@@ -2,6 +2,15 @@ extension IterableExtension<E> on Iterable<E> {
   /// Returns all unique elements paired with the number of occurences they have
   /// in this [Iterable].
   Iterable<(E, int)> counts() {
+    return countsMap().entries.map(
+          (MapEntry entry) => (
+            entry.key,
+            entry.value,
+          ),
+        );
+  }
+
+  Map<E, int> countsMap() {
     final Map<E, int> counts = {};
     final Iterator elementIterator = iterator;
     while (elementIterator.moveNext()) {
@@ -10,8 +19,7 @@ extension IterableExtension<E> on Iterable<E> {
       counts[element] = count == null ? 1 : count + 1;
     }
 
-    return counts.entries
-        .map((MapEntry<E, int> entry) => (entry.key, entry.value));
+    return Map.fromEntries(counts.entries);
   }
 
   /// Convenience getter for accessing the second element in an [Iterable].
