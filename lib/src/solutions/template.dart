@@ -2,11 +2,12 @@
 
 // void main() async {
 //   List<String> puzzleInput = await Aoc.puzzleInputStrings;
-//   List<String> testInput = await Aoc.testInputStrings;
+//   List<String> testInput = await Aoc.testInputStrings;\
 
-//   String puzzleInput = await Aoc.puzzleInputString;
-//   String testInput = await Aoc.testInputString;
+//   int answer = solve(testInput);
+//   print(answer);
+// }
 
-//   List<int> puzzleInput = await Aoc.puzzleInputInts;
-//   List<int> testInput = await Aoc.testInputInts;
+// int solve(List<String>) input) {
+//   return -1;
 // }
