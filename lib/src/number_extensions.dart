@@ -1,5 +1,31 @@
 import 'package:advent_of_code_2023/src/iterable_extensions.dart';
 
+extension NumberExtension on int {
+  int gcd(int other) {
+    int a = this;
+    while (other != 0) {
+      int t = other;
+      other = a % t;
+      a = t;
+    }
+    return a;
+  }
+
+  int lcm(int other) {
+    return this ~/ this.gcd(other) * other;
+  }
+}
+
+extension IntegerListExtension on Iterable<int> {
+  int gcd() {
+    return reduce((a, b) => a.gcd(b));
+  }
+
+  int lcm() {
+    return reduce((a, b) => a.lcm(b));
+  }
+}
+
 extension NumberListExtension<E extends num> on Iterable<E> {
   /// Scales all elements in this with [factor].
   Iterable<num> operator *(int factor) => map((E e) => e * factor);
