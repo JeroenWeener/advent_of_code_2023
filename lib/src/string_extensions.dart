@@ -56,4 +56,16 @@ extension StringExtension on String {
   bool regexHasMatch(String re) {
     return RegExp(re).hasMatch(this);
   }
+
+  /// Extracts integers from this [String].
+  ///
+  /// **NOTE:** Parses '-' as part of the integer, treating it as a negative
+  /// number. If this behavior is undesired, consider piping the result into
+  /// `map((n) => n.abs())`.
+  Iterable<int> extractInts() {
+    return RegExp(r'-?\d+')
+        .allMatches(this)
+        .map((e) => e.group(0)!)
+        .map(int.parse);
+  }
 }

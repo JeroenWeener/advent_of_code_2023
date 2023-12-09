@@ -50,6 +50,9 @@ extension NumberListExtension<E extends num> on Iterable<E> {
 
   /// Returns an [Iterable] emitting the differences between the values in this.
   ///
+  /// **NOTE:** if this turns out to unexpectedly cause a bottleneck in the
+  /// program, consider calling `.toList` on the result.
+  ///
   /// If there is less than 2 elements, the resulting iterable will not emit
   /// anything.
   Iterable<E> diff() sync* {
