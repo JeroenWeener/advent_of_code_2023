@@ -23,7 +23,7 @@ String getSessionId() {
 /// Path is split on '/' instead of [Platform.pathSeparator], as somehow the
 /// path uses '/' regardless of platform.
 String getDayString() =>
-    RegExp(r'day(\d)').firstMatch(Platform.script.path)!.group(1)!;
+    RegExp(r'day(\d+)').firstMatch(Platform.script.path)!.group(1)!;
 
 /// Same as [getDayString], but returns an [int].
 ///

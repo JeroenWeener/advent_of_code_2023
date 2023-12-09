@@ -35,7 +35,7 @@ class Aoc {
       (await puzzleInputStrings).first;
 
   static Future<List<int>> get puzzleInputInts async =>
-      (await puzzleInputStrings).map((String s) => int.parse(s)).toList();
+      (await puzzleInputStrings).map(int.parse).toList();
 
   static Future<List<String>> _testInput(String filePath) async {
     final File inputFile = File(filePath);
@@ -56,7 +56,7 @@ class Aoc {
       (await testInputStrings).first;
 
   static Future<List<int>> get testInputInts async =>
-      (await testInputStrings).map((String s) => int.parse(s)).toList();
+      (await testInputStrings).map(int.parse).toList();
 
   static Future<List<String>> get testInputAlt async =>
       _testInput(_puzzleTestAltInputFileName);
@@ -64,7 +64,7 @@ class Aoc {
   static Future<String> get testInputStringAlt async =>
       (await testInputStringsAlt).first;
   static Future<List<int>> get testInputIntsAlt async =>
-      (await testInputStringsAlt).map((String s) => int.parse(s)).toList();
+      (await testInputStringsAlt).map(int.parse).toList();
 
   static Future<void> upload1(Object solution) {
     return _upload(solution, 1);
