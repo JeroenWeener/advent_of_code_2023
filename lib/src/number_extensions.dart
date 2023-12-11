@@ -1,6 +1,6 @@
-import 'package:advent_of_code_2023/src/iterable_extensions.dart';
+import 'iterable_extensions.dart';
 
-extension NumberExtension on int {
+extension IntExtension on int {
   int gcd(int other) {
     int a = this;
     while (other != 0) {
@@ -13,6 +13,12 @@ extension NumberExtension on int {
 
   int lcm(int other) {
     return this ~/ this.gcd(other) * other;
+  }
+}
+
+extension NumberExtension<E extends num> on E {
+  E abs() {
+    return (this < 0 ? -this : this) as E;
   }
 }
 
