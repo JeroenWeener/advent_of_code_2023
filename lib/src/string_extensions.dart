@@ -1,3 +1,6 @@
+import 'iterable_extensions.dart';
+import 'number_extensions.dart';
+
 extension StringExtension on String {
   /// Returns all unique characters paired with the number of occurences they
   /// have in this [String].
@@ -45,6 +48,25 @@ extension StringExtension on String {
     return substring(0, n);
   }
 
+  Iterable<O> map<O>(O Function(String c) f) sync* {
+    for (int i = 0; i < length; i++) {
+      final String c = this[i];
+      yield f(c);
+    }
+  }
+
+  bool every(bool Function(String c) f) {
+    return map((c) => f(c)).every((e) => e);
+  }
+
+  Iterable<String> where(bool Function(String c) f) {
+    return map((c) => c).where((c) => f(c));
+  }
+
+  Iterable<T> expand<T>(Iterable<T> Function(String c) toElements) {
+    return map((c) => toElements(c)).flatten();
+  }
+
   Iterable<String> regexAllMatches(String re) {
     return RegExp(re).allMatches(this).map((e) => e.group(0)!);
   }
@@ -67,5 +89,17 @@ extension StringExtension on String {
         .allMatches(this)
         .map((e) => e.group(0)!)
         .map(int.parse);
+  }
+}
+
+extension StringIterableExtension on Iterable<String> {
+  Iterable<Iterable<String>> T() sync* {
+    assert(
+      range(length).every((e) => elementAt(e).length == first.length),
+    );
+
+    for (int i = 0; i < first.length; i++) {
+      yield map((e) => e[i]);
+    }
   }
 }
