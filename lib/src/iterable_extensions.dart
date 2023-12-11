@@ -80,14 +80,27 @@ extension IterableExtension<E> on Iterable<E> {
       yield window;
     }
   }
+
+  Iterable<(E, E)> combinations() sync* {
+    for (int i = 0; i < length; i++) {
+      final E a = elementAt(i);
+      for (E b in skip(i)) {
+        yield (a, b);
+      }
+    }
+  }
 }
 
 extension IterableIterableExtension<E> on Iterable<Iterable<E>> {
-  Iterable<Iterable<E>> get T sync* {
+  Iterable<Iterable<E>> T() sync* {
     assert(map((es) => es.length).every((e) => e == first.length));
 
-    for (var i = 0; i < first.length; i++) {
+    for (int i = 0; i < first.length; i++) {
       yield map((e) => e.elementAt(i));
     }
+  }
+
+  Iterable<E> flatten() {
+    return reduce((a, b) => a.toList() + b.toList());
   }
 }

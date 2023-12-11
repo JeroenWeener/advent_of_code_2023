@@ -107,7 +107,7 @@ int solve(List<String> input) {
           .split(' ')
           .map(int.tryParse)
           .whereType<int>())
-      .T
+      .T()
       .map((ns) => ns.toList());
 
   return nss.map(
