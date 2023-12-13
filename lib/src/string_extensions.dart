@@ -48,6 +48,10 @@ extension StringExtension on String {
     return substring(0, n);
   }
 
+  String skip(int n) {
+    return substring(n);
+  }
+
   Iterable<O> map<O>(O Function(String c) f) sync* {
     for (int i = 0; i < length; i++) {
       final String c = this[i];
@@ -63,8 +67,14 @@ extension StringExtension on String {
     return map((c) => c).where((c) => f(c));
   }
 
-  Iterable<T> expand<T>(Iterable<T> Function(String c) toElements) {
-    return map((c) => toElements(c)).flatten();
+  Iterable<T> expand<T>(Iterable<T> Function(String c) f) {
+    return map((c) => f(c)).flatten();
+  }
+
+  Iterable<List<String>> sw(int windowSize) => slidingWindow(windowSize);
+
+  Iterable<List<String>> slidingWindow(int windowSize) {
+    return map((c) => c).slidingWindow(windowSize);
   }
 
   Iterable<String> regexAllMatches(String re) {
