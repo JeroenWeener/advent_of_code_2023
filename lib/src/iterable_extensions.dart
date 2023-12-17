@@ -1,13 +1,16 @@
 extension IterableExtension<E> on Iterable<E> {
   /// Returns all unique elements paired with the number of occurences they have
   /// in this [Iterable].
-  Iterable<(E, int)> counts() {
-    return countsMap().entries.map(
+  List<(E, int)> counts() {
+    return countsMap()
+        .entries
+        .map(
           (MapEntry entry) => (
             entry.key,
             entry.value,
-          ),
-        );
+          ) as (E, int),
+        )
+        .toList();
   }
 
   Map<E, int> countsMap() {
@@ -58,6 +61,8 @@ extension IterableExtension<E> on Iterable<E> {
   /// Returns a sliding window for a window of size [windowSize].
   ///
   /// [windowSize] should be [1..length].
+  ///
+  /// TODO: .toList repeats last element???
   Iterable<List<E>> slidingWindow(int windowSize) sync* {
     assert(
         windowSize <= length, 'Window size is larger than number of elements');
@@ -89,15 +94,26 @@ extension IterableExtension<E> on Iterable<E> {
       }
     }
   }
+
+  Iterable<E> repeat(int n) {
+    assert(n >= 0);
+
+    if (n == 0) {
+      return [];
+    }
+    return followedBy(repeat(n - 1));
+  }
 }
 
 extension IterableIterableExtension<E> on Iterable<Iterable<E>> {
-  Iterable<Iterable<E>> T() sync* {
+  List<List<E>> T() {
     assert(map((es) => es.length).every((e) => e == first.length));
 
+    List<List<E>> result = [];
     for (int i = 0; i < first.length; i++) {
-      yield map((e) => e.elementAt(i));
+      result.add(map((e) => e.elementAt(i)).toList());
     }
+    return result;
   }
 
   Iterable<E> flatten() {

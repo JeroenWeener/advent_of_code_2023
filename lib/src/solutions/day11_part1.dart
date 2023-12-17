@@ -156,6 +156,5 @@ List<String> expand(List<String> input) {
       .T()
       .expand((e) => e.every((c) => c == '.') ? [e, e] : [e])
       .T()
-      .map((e) => e.join())
       .toList();
 }

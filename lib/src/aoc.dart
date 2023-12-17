@@ -32,7 +32,7 @@ class Aoc {
   static Future<List<String>> get puzzleInputStrings => puzzleInput;
 
   static Future<String> get puzzleInputString async =>
-      (await puzzleInputStrings).first;
+      (await puzzleInputStrings).join('\n');
 
   static Future<List<int>> get puzzleInputInts async =>
       (await puzzleInputStrings).map(int.parse).toList();
@@ -53,7 +53,7 @@ class Aoc {
       _testInput(_puzzleTestInputFileName);
   static Future<List<String>> get testInputStrings => testInput;
   static Future<String> get testInputString async =>
-      (await testInputStrings).first;
+      (await testInputStrings).join('\n');
 
   static Future<List<int>> get testInputInts async =>
       (await testInputStrings).map(int.parse).toList();

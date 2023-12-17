@@ -4,13 +4,16 @@ import 'number_extensions.dart';
 extension StringExtension on String {
   /// Returns all unique characters paired with the number of occurences they
   /// have in this [String].
-  Iterable<(String, int)> counts() {
-    return countsMap().entries.map(
+  List<(String, int)> counts() {
+    return countsMap()
+        .entries
+        .map(
           (MapEntry entry) => (
             entry.key,
             entry.value,
-          ),
-        );
+          ) as (String, int),
+        )
+        .toList();
   }
 
   Map<String, int> countsMap() {
@@ -48,8 +51,16 @@ extension StringExtension on String {
     return substring(0, n);
   }
 
+  String takeWhile(bool Function(String c) test) {
+    return split('').takeWhile(test).join();
+  }
+
   String skip(int n) {
     return substring(n);
+  }
+
+  String skipWhile(bool Function(String c) test) {
+    return split('').skipWhile(test).join();
   }
 
   Iterable<O> map<O>(O Function(String c) f) sync* {
@@ -59,22 +70,37 @@ extension StringExtension on String {
     }
   }
 
+  Iterable<(int, String)> get indexed {
+    return range(length).zip(split(''));
+  }
+
   bool every(bool Function(String c) f) {
-    return map((c) => f(c)).every((e) => e);
+    return split('').every(f);
   }
 
   Iterable<String> where(bool Function(String c) f) {
-    return map((c) => c).where((c) => f(c));
+    return split('').where((c) => f(c));
   }
 
   Iterable<T> expand<T>(Iterable<T> Function(String c) f) {
-    return map((c) => f(c)).flatten();
+    return map(f).flatten();
   }
+
+  Iterable<String> repeat(int n) {
+    assert(n >= 0);
+
+    if (n == 0) {
+      return [];
+    }
+    return <String>[this].followedBy(repeat(n - 1));
+  }
+
+  String get reversed => codeUnits.reversed.map(String.fromCharCode).join('');
 
   Iterable<List<String>> sw(int windowSize) => slidingWindow(windowSize);
 
   Iterable<List<String>> slidingWindow(int windowSize) {
-    return map((c) => c).slidingWindow(windowSize);
+    return split('').slidingWindow(windowSize);
   }
 
   Iterable<String> regexAllMatches(String re) {
@@ -94,22 +120,25 @@ extension StringExtension on String {
   /// **NOTE:** Parses '-' as part of the integer, treating it as a negative
   /// number. If this behavior is undesired, consider piping the result into
   /// `map((n) => n.abs())`.
-  Iterable<int> extractInts() {
+  List<int> extractInts() {
     return RegExp(r'-?\d+')
         .allMatches(this)
         .map((e) => e.group(0)!)
-        .map(int.parse);
+        .map(int.parse)
+        .toList();
   }
 }
 
 extension StringIterableExtension on Iterable<String> {
-  Iterable<Iterable<String>> T() sync* {
+  List<String> T() {
     assert(
       range(length).every((e) => elementAt(e).length == first.length),
     );
 
+    List<String> result = [];
     for (int i = 0; i < first.length; i++) {
-      yield map((e) => e[i]);
+      result.add(map((e) => e[i]).join(''));
     }
+    return result;
   }
 }
