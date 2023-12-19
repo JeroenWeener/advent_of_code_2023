@@ -36,6 +36,9 @@ extension StringExtension on String {
   /// Convenience getter for accessing the last character in a [String].
   String get last => this[length - 1];
 
+  /// Convenience getter for accessing the second last character in a [String].
+  String get secondLast => this[length - 2];
+
   /// Convenience getter for accessing the middle character in a [String].
   ///
   /// Asserts whether the string has an uneven number of characters.
