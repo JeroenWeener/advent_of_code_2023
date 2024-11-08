@@ -85,9 +85,9 @@ extension StringExtension on String {
     return split('').where((c) => f(c));
   }
 
-  Iterable<T> expand<T>(Iterable<T> Function(String c) f) {
-    return map(f).flatten();
-  }
+  // Iterable<T> expand<T>(Iterable<T> Function(String c) f) {
+  //   return map(f).flatten();
+  // }
 
   Iterable<String> repeat(int n) {
     assert(n >= 0);

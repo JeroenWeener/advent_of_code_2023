@@ -25,8 +25,17 @@ extension IterableExtension<E> on Iterable<E> {
     return Map.fromEntries(counts.entries);
   }
 
+  E? firstWhereOrNull(bool Function(E element) test) {
+    final Iterable<E> matchingElements = where(test);
+    return matchingElements.isNotEmpty ? matchingElements.first : null;
+  }
+
   /// Convenience getter for accessing the second element in an [Iterable].
   E get second => elementAt(1);
+
+  /// Convenience getter for accessing the second last character in an
+  /// [Iterable].
+  E get secondLast => elementAt(length - 2);
 
   /// Convenience getter for accessing the middle element in an [Iterable].
   ///
@@ -41,7 +50,7 @@ extension IterableExtension<E> on Iterable<E> {
 
   /// Zips this with [other].
   ///
-  /// Returns an iterable containing [Pair]s, where the left element is from
+  /// Returns an iterable containing [Record]s, where the left element is from
   /// this and the right element is from [other].
   ///
   /// The resulting iterable will have the same length as the shortest iterable
@@ -116,7 +125,25 @@ extension IterableIterableExtension<E> on Iterable<Iterable<E>> {
     return result;
   }
 
-  Iterable<E> flatten() {
-    return reduce((a, b) => a.toList() + b.toList());
+  // Iterable<E> flatten() {
+  //   if (length == 0) return [];
+  //   if (length == 1) return first;
+  //   return reduce((a, b) => a.followedBy(b));
+  // }
+}
+
+extension ListListExtension<E> on List<List<E>> {
+  List<E> flatten() {
+    if (length == 0) return [];
+    if (length == 1) return first;
+    return reduce((a, b) => [...a, ...b]);
+  }
+}
+
+extension SetSetExtension<E> on Set<Set<E>> {
+  Set<E> flatten() {
+    if (length == 0) return {};
+    if (length == 1) return first;
+    return reduce((a, b) => {...a, ...b});
   }
 }
